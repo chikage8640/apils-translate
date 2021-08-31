@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Runtime folder
+runtime/
+
+# VScode setting folder
+.vscode
+
+# Language identification model
+lid.176.*
