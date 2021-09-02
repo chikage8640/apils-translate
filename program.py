@@ -12,17 +12,17 @@ from flask import Flask, jsonify, make_response, request
 from waitress import serve
 
 
-# 以下の変数の値を変更し、DeepL翻訳をセットアップしてください。
+# Change the values of the following variables to set up the DeepL translation.
 
-# enableDeepl:DeepL翻訳を使う場合はTrue, 使わない場合はFalse。
+# enableDeepl:True if the DeepL translation is used, false if it is not.
 enableDeepl = False
 
-# deeplApiUrl:APIを呼ぶためのURL。必ずダブルクォーテーション(")で囲うこと。
-# プランがフリーの場合は"https://api-free.deepl.com/v2/translate"
-# プランがProの場合は"https://api.deepl.com/v2/translate"
+# deeplApiUrl:The URL to call the API.
+# If the plan is free "https://api-free.deepl.com/v2/translate"
+# If the plan is pro "https://api.deepl.com/v2/translate"
 deeplApiUrl = "https://api-free.deepl.com/v2/translate"
 
-#deeplKey:DeepL翻訳のAPIを利用するためのAPIキー。必ずダブルクォーテーション(")で囲うこと。
+#deeplKey:API key for using the DeepL translation API.
 deeplKey = ""
 
 
