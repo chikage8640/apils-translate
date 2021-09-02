@@ -7,8 +7,9 @@ This API can use Google Translate and DeepL Translator.(Configuration is require
 Download [release file](https://github.com/chikage8640/apils-translate/releases) and unzip.
 
 ## Setup DeepL Translater
-Edit program.py
-```python
+Edit `program.py`
+
+```python:program.py
 ...
 
 # Change the values of the following variables to set up the DeepL translation.
@@ -30,7 +31,7 @@ deeplKey = "yourApiKey"
 
 
 ## Start server
-Run run.bat
+Run `run.bat`
 
 ## Translate
 Call it as a REST API, either GET or POST is fine. The return value is JSON.  
@@ -45,18 +46,20 @@ curl "http://localhost:50000/translate" -d "text=Hello world!" -d "target=de"
 Press Ctrl+C or kill task.
 
 # API
+## URL
+`http://localhost:50000/translate`
 ## Paramaters
 | Name | Description | Example |
 | ---- | ---- | ---- |
-| text | Text to be translated | Hello World! |
-| target | Language code to translate to | de |
+| `text` | Text to be translated | Hello World! |
+| `target` | Language code to translate to | de |
 ## Return value
 | Name | Description | Example |
 | ---- | ---- | ---- |
-| states | States code | 200<br/>400 |
-| text | Translated text | Hallo Welt! |
-| massage | Details of errors, etc. | Bad target was specified. |
-| translater | The engine that did the translation<br/>(If no translation was done, "Return" will be returned.) | Google<br/>DeepL<br/>Return
+| `states` | States code | 200<br/>400 |
+| `text` | Translated text | Hallo Welt! |
+| `massage` | Details of errors, etc. | Bad target was specified. |
+| `translater` | The engine that did the translation<br/>(If no translation was done, "Return" will be returned.) | Google<br/>DeepL<br/>Return
 
 # System requirements
 This application require the folllowing system to run.
@@ -64,7 +67,7 @@ This application require the folllowing system to run.
 
 # Development
 In addition to the system requirements, the following environment is required:
-- Python 3.9(.7) installed in %LOCALAPPDATA%\Programs\
+- Python 3.9(.7) installed in `%LOCALAPPDATA%\Programs\`
 - Microsoft C++ Build Tools
 
 After cloning the repository, run setup.bat.
