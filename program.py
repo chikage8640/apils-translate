@@ -77,7 +77,7 @@ def autoTranslate(text, targetLang):
       return googleTranslate(text, targetLang)
 
 # ここまで動けば後はポート関連のエラーだけなので、終了方法をprintしてサーバーを動かす。
-print("サーバーが起動しました。停止するにはCtrl+Cを押してください。")
+print("The server has started. To stop it, press Ctrl+C.")
 
 # リクエストを受け付ける本体
 # Flaskとwaitressを使った簡易的なREST APIの実装。
