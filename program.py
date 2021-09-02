@@ -88,10 +88,10 @@ api = Flask(__name__)
 def apiCalled():
   if request.method == "POST":
     text = request.form["text"]
-    targetLang = request.form["target"]
+    targetLang = request.form["target"].lower()
   else:
     text = request.args.get("text")
-    targetLang = request.args.get("target")
+    targetLang = request.args.get("target").lower()
   
   if targetLang in aTranselateTarget:
     translation = autoTranslate(text,targetLang)
