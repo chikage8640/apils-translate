@@ -27,8 +27,6 @@ deeplKey = ""
 
 
 
-# ログ保存の確認。Trueで保存されるが、サイズが肥大化するので定期的に処理すること。
-exportLog = False
 # GASを使った独自実装のGppgle翻訳のため、いじる必要なし。なおスクリプトの所有者である美瀬和夏以外は転用禁止とする。
 gTransUrl = "https://script.google.com/macros/s/AKfycbwNFWAn6x_wTliCl61YG_AHfhmIOC7ZqhMTYI8KNAE5S6iobkI85Ep8yaj0oXInY0bk/exec"
 # コードの実行されているディレクトリを取得する変数。
