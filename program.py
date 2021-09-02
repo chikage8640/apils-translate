@@ -76,6 +76,13 @@ def autoTranslate(text, targetLang):
     else:
       return googleTranslate(text, targetLang)
 
+# エラーのレスポンスを作る関数。
+def make400(text):
+  return make_response(jsonify({
+      "states":400,
+      "massage":text
+    })), 400
+
 # ここまで動けば後はポート関連のエラーだけなので、終了方法をprintしてサーバーを動かす。
 print("The server has started. To stop it, press Ctrl+C.")
 
@@ -87,12 +94,29 @@ api = Flask(__name__)
 @api.route("/translate", methods=['GET', 'POST'])
 def apiCalled():
   if request.method == "POST":
-    text = request.form["text"]
-    targetLang = request.form["target"].lower()
+    if "text" in request.form:
+      if "target" in request.form:
+        text = request.form["text"]
+        targetLang = request.form["target"].lower()
+      else:
+        return make400('"target" is not specified.')
+    else:
+      return make400('"text" is not specified.')
   else:
-    text = request.args.get("text")
-    targetLang = request.args.get("target").lower()
-  
+    if "text" in request.args:
+      if "target" in request.args:
+        text = request.args.get("text")
+        targetLang = request.args.get("target").lower()
+      else:
+        return make400('"target" is not specified.')
+    else:
+      return make400('"text" is not specified.')
+
+  if text == "":
+    return make400('"text" is blank.')
+  if targetLang == "":
+    return make400('"target is blank.')
+
   if targetLang in aTranselateTarget:
     translation = autoTranslate(text,targetLang)
     return make_response(jsonify({
@@ -101,10 +125,7 @@ def apiCalled():
       "translater":translation[1]
     })), 200
   else:
-    return make_response(jsonify({
-      "states":400,
-      "massage":"Bad target was specified."
-    })), 400
+    return make400("Bad target was specified.")
 
 if __name__ == "__main__":
   serve(api, host='localhost', port=50000)
