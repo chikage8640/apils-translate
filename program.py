@@ -28,7 +28,7 @@ deeplKey = ""
 
 
 # GASを使った独自実装のGppgle翻訳のため、いじる必要なし。なおスクリプトの所有者である美瀬和夏以外は転用禁止とする。
-gTransUrl = "https://script.google.com/macros/s/AKfycbwNFWAn6x_wTliCl61YG_AHfhmIOC7ZqhMTYI8KNAE5S6iobkI85Ep8yaj0oXInY0bk/exec"
+gTransUrl = "https://script.google.com/macros/s/AKfycbzYAf7vj791OoeKs6ZL1e5pFNuVUikxAEAEucl-OwLqcsS-X9zcT4JyFXtVGgDagx2V/exec"
 # コードの実行されているディレクトリを取得する変数。
 codePath = os.path.dirname(__file__)
 # 言語判定用モデルの場所。
@@ -48,12 +48,12 @@ def detectLanguage(text):
 # DeepL翻訳の関数。文と翻訳先の言語コードを入れると翻訳した文が返ってくる。
 # なおenableDeeplの値を確認していないので、必ず呼び出す前に確認すること。
 def deeplTranslate(text, targetLang):
-  r = requests.get(deeplApiUrl, {"auth_key":deeplKey, "text":text, "target_lang":targetLang})
+  r = requests.post(deeplApiUrl, {"auth_key":deeplKey, "text":text, "target_lang":targetLang})
   return r.json()["translations"][0]["text"], "DeepL"
 
 # Google翻訳の関数。文と翻訳先の言語コードを入れると翻訳した文が返ってくる。
 def googleTranslate(text, targetLang):
-  r = requests.get(gTransUrl, {"text":text, "target":targetLang})
+  r = requests.post(gTransUrl, {"text":text, "target":targetLang})
   return r.json()["text"], "Google"
 
 # 翻訳を処理する関数。文と翻訳先の言語コードを入れると翻訳した文が返ってくる。
