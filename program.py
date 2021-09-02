@@ -87,7 +87,7 @@ api = Flask(__name__)
 @api.route("/translate", methods=['GET', 'POST'])
 def apiCalled():
   if request.method == "POST":
-    text = request.form["name"]
+    text = request.form["text"]
     targetLang = request.form["target"]
   else:
     text = request.args.get("text")
