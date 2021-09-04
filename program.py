@@ -28,7 +28,7 @@ deeplKey = ""
 
 
 # GASを使った独自実装のGppgle翻訳のため、いじる必要なし。なおスクリプトの所有者である美瀬和夏以外は転用禁止とする。
-gTransUrl = "https://script.google.com/macros/s/AKfycbzYAf7vj791OoeKs6ZL1e5pFNuVUikxAEAEucl-OwLqcsS-X9zcT4JyFXtVGgDagx2V/exec"
+gTransUrl = "https://script.google.com/macros/s/AKfycby3K3Tu1Pl1A2eEWdwKlwnJ3KtwapscfW58uYaV5DuFAqkBMlesH_kKGzrfa4XfS14g/exec"
 # コードの実行されているディレクトリを取得する変数。
 codePath = os.path.dirname(__file__)
 # 言語判定用モデルの場所。
@@ -96,6 +96,12 @@ def apiCalled():
       if "target" in request.form:
         text = request.form["text"]
         targetLang = request.form["target"].lower()
+      else:
+        return make400('"target" is not specified.')
+    elif "text" in request.json:
+      if "target" in request.json:
+        text = request.json["text"]
+        targetLang = request.json["target"].lower()
       else:
         return make400('"target" is not specified.')
     else:
