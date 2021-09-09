@@ -10,6 +10,7 @@ import requests
 import fasttext
 from flask import Flask, jsonify, make_response, request
 from waitress import serve
+import time
 
 
 # Change the values of the following variables to set up the DeepL translation.
@@ -26,9 +27,10 @@ deeplApiUrl = "https://api-free.deepl.com/v2/translate"
 deeplKey = ""
 
 
-
+# サーバーのスレッド数。もし足りなかったら増やす。
+waitressThreads = 6
 # GASを使った独自実装のGppgle翻訳のため、いじる必要なし。なおスクリプトの所有者である美瀬和夏以外は転用禁止とする。
-gTransUrl = "https://script.google.com/macros/s/AKfycbwNFWAn6x_wTliCl61YG_AHfhmIOC7ZqhMTYI8KNAE5S6iobkI85Ep8yaj0oXInY0bk/exec"
+gTransUrl = "https://script.google.com/macros/s/AKfycby3K3Tu1Pl1A2eEWdwKlwnJ3KtwapscfW58uYaV5DuFAqkBMlesH_kKGzrfa4XfS14g/exec"
 # コードの実行されているディレクトリを取得する変数。
 codePath = os.path.dirname(__file__)
 # 言語判定用モデルの場所。
@@ -48,12 +50,18 @@ def detectLanguage(text):
 # DeepL翻訳の関数。文と翻訳先の言語コードを入れると翻訳した文が返ってくる。
 # なおenableDeeplの値を確認していないので、必ず呼び出す前に確認すること。
 def deeplTranslate(text, targetLang):
-  r = requests.get(deeplApiUrl, {"auth_key":deeplKey, "text":text, "target_lang":targetLang})
-  return r.json()["translations"][0]["text"], "DeepL"
+  r = requests.post(deeplApiUrl, {"auth_key":deeplKey, "text":text, "target_lang":targetLang})
+  if r.status_code == 200:
+    return r.json()["translations"][0]["text"], "DeepL"
+  elif r.status_code == 429 or r.status_code == 529:
+    print("DeepL is busy. Retry after 3 sec.")
+    time.sleep(5)
+    return deeplTranslate(text, targetLang)
+    
 
 # Google翻訳の関数。文と翻訳先の言語コードを入れると翻訳した文が返ってくる。
 def googleTranslate(text, targetLang):
-  r = requests.get(gTransUrl, {"text":text, "target":targetLang})
+  r = requests.post(gTransUrl, {"text":text, "target":targetLang})
   return r.json()["text"], "Google"
 
 # 翻訳を処理する関数。文と翻訳先の言語コードを入れると翻訳した文が返ってくる。
@@ -98,6 +106,12 @@ def apiCalled():
         targetLang = request.form["target"].lower()
       else:
         return make400('"target" is not specified.')
+    elif "text" in request.json:
+      if "target" in request.json:
+        text = request.json["text"]
+        targetLang = request.json["target"].lower()
+      else:
+        return make400('"target" is not specified.')
     else:
       return make400('"text" is not specified.')
   else:
@@ -126,4 +140,4 @@ def apiCalled():
     return make400("Bad target was specified.")
 
 if __name__ == "__main__":
-  serve(api, host='localhost', port=50000)
+  serve(api, host='localhost', port=50000, threads=waitressThreads)
