@@ -10,6 +10,7 @@ import requests
 import fasttext
 from flask import Flask, jsonify, make_response, request
 from waitress import serve
+import time
 
 
 # Change the values of the following variables to set up the DeepL translation.
@@ -49,7 +50,13 @@ def detectLanguage(text):
 # なおenableDeeplの値を確認していないので、必ず呼び出す前に確認すること。
 def deeplTranslate(text, targetLang):
   r = requests.post(deeplApiUrl, {"auth_key":deeplKey, "text":text, "target_lang":targetLang})
-  return r.json()["translations"][0]["text"], "DeepL"
+  if r.status_code == 200:
+    return r.json()["translations"][0]["text"], "DeepL"
+  elif r.status_code == 429 or r.status_code == 529:
+    print("DeepL is busy. Retry after 3 sec.")
+    time.sleep(5)
+    return deeplTranslate(text, targetLang)
+    
 
 # Google翻訳の関数。文と翻訳先の言語コードを入れると翻訳した文が返ってくる。
 def googleTranslate(text, targetLang):
