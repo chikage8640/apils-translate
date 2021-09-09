@@ -27,7 +27,8 @@ deeplApiUrl = "https://api-free.deepl.com/v2/translate"
 deeplKey = ""
 
 
-
+# サーバーのスレッド数。もし足りなかったら増やす。
+waitressThreads = 6
 # GASを使った独自実装のGppgle翻訳のため、いじる必要なし。なおスクリプトの所有者である美瀬和夏以外は転用禁止とする。
 gTransUrl = "https://script.google.com/macros/s/AKfycby3K3Tu1Pl1A2eEWdwKlwnJ3KtwapscfW58uYaV5DuFAqkBMlesH_kKGzrfa4XfS14g/exec"
 # コードの実行されているディレクトリを取得する変数。
@@ -139,4 +140,4 @@ def apiCalled():
     return make400("Bad target was specified.")
 
 if __name__ == "__main__":
-  serve(api, host='localhost', port=50000)
+  serve(api, host='localhost', port=50000, threads=waitressThreads)
