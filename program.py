@@ -11,24 +11,22 @@ import fasttext
 from flask import Flask, jsonify, make_response, request
 from waitress import serve
 import time
+import configparser
 
-
-# Change the values of the following variables to set up the DeepL translation.
-
-# enableDeepl:True if the DeepL translation is used, false if it is not.
+# デフォルト設定
+# DeepL翻訳を使うかどうか
 enableDeepl = False
-
-# deeplApiUrl:The URL to call the API.
-# If the plan is free "https://api-free.deepl.com/v2/translate"
-# If the plan is pro "https://api.deepl.com/v2/translate"
+# DeepLのAPIのURL
 deeplApiUrl = "https://api-free.deepl.com/v2/translate"
-
-#deeplKey:API key for using the DeepL translation API.
+# DeepLのAPIアクセスキー
 deeplKey = ""
-
-
 # サーバーのスレッド数。もし足りなかったら増やす。
 waitressThreads = 6
+# サーバーのホスト
+host = "localhost"
+# サーバーのポート
+port = 50000
+
 # GASを使った独自実装のGppgle翻訳のため、いじる必要なし。なおスクリプトの所有者である美瀬和夏以外は転用禁止とする。
 gTransUrl = "https://script.google.com/macros/s/AKfycby3K3Tu1Pl1A2eEWdwKlwnJ3KtwapscfW58uYaV5DuFAqkBMlesH_kKGzrfa4XfS14g/exec"
 # コードの実行されているディレクトリを取得する変数。
@@ -41,6 +39,48 @@ dTranselateSource = ["bg", "cs", "da", "de", "el", "en", "es", "et", "fi", "fr",
 dTranselateTarget = ["bg", "cs", "da", "de", "el", "en-gb", "en-us", "es", "et", "fi", "fr", "hu", "it", "ja", "lt", "lv", "nl", "pl", "pt-br", "pt-pt", "ro", "ru", "sk", "sl", "sv", "zh", "en", "pt"]
 gTranselateTarget = ["af", "sq", "am", "ar", "hy", "az", "eu", "be", "bn", "bs", "bg", "ca", "ceb", "zh-cn", "zh", "zh-tw", "co", "hr", "cs", "da", "nl", "en", "eo", "et", "fi", "fr", "fy", "gl", "ka", "de", "el", "gu", "ht", "ha", "haw", "he", "iw", "hi", "hmn", "hu", "is", "ig", "id", "ga", "it", "ja", "jv", "kn", "kk", "km", "rw", "ko", "ku", "ky", "lo", "la", "lv", "lt", "lb", "mk", "mg", "ms", "ml", "mt", "mi", "mr", "mn", "my", "ne", "no", "ny", "or", "ps", "fa", "pl", "pt", "pa", "ro", "ru", "sm", "gd", "sr", "st", "sn", "sd", "si", "sk", "sl", "so", "es", "su", "sw", "sv", "tl", "tg", "ta", "tt", "te", "th", "tr", "tk", "uk", "ur", "ug", "uz", "vi", "cy", "xh", "yi", "yo", "zu"]
 aTranselateTarget = dTranselateTarget + gTranselateTarget
+
+# boolに変換する関数。
+def str2bool(s):
+  return s.lower() in ["true", "t", "yes", "1"]
+
+# config.ini関連のコード
+
+# configの読み込みをする関数。
+def loadConfig():
+  config = configparser.ConfigParser()
+  config.read(os.path.join(codePath, "config.ini"))
+  readDeeplConfig = config["Deepl"]
+  readSystemComfig = config["System"]
+
+  # 設定値の読み込み
+  global enableDeepl
+  global deeplApiUrl
+  global deeplKey
+  global waitressThreads
+  global host
+  global port
+  # DeepL翻訳を使うかどうか
+  if readDeeplConfig["enable"] is not None:
+    enableDeepl = str2bool(readDeeplConfig["enable"])
+  # DeepLのAPIのURL
+  if readDeeplConfig["apiUrl"] is not None:
+    deeplApiUrl = readDeeplConfig["apiUrl"]
+  # DeepLのAPIアクセスキー
+  if readDeeplConfig["apiKey"] is not None:
+    deeplKey = readDeeplConfig["apiKey"]
+  # サーバーのスレッド数。もし足りなかったら増やす。
+  if readSystemComfig["waitressThreads"] is not None:
+    waitressThreads = int(readSystemComfig["waitressThreads"])
+  # サーバーのホスト
+  if readSystemComfig["host"] is not None:
+    host = readSystemComfig["host"]
+  # サーバーのポート
+  if readSystemComfig["port"] is not None:
+    port = readSystemComfig["port"]
+
+# config読み込み
+loadConfig()
 
 # 言語判定の関数。文を入れると言語コードが返ってくる。
 def detectLanguage(text):
@@ -140,4 +180,4 @@ def apiCalled():
     return make400("Bad target was specified.")
 
 if __name__ == "__main__":
-  serve(api, host='localhost', port=50000, threads=waitressThreads)
+  serve(api, host=host, port=port, threads=waitressThreads)
