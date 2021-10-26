@@ -7,26 +7,28 @@ This API can use Google Translate and DeepL Translator.(Configuration is require
 Download [release file](https://github.com/chikage8640/apils-translate/releases) and unzip.
 
 ## Setup DeepL Translater
-Edit `program.py`
+Edit `config.ini`
 
-```python:program.py
-...
+```ini:config.ini
+;Change the values of the following variables to set up the DeepL translation.
+[Deepl]
 
-# Change the values of the following variables to set up the DeepL translation.
+;True if the DeepL translation is used, false if it is not.
+enable = True
 
-# enableDeepl:True if the DeepL translation is used, false if it is not.
-enableDeepl = True
+;The URL to call the API.
+;If the plan is free "https://api-free.deepl.com/v2/translate"
+;If the plan is pro "https://api.deepl.com/v2/translate"
+apiUrl = https://api-free.deepl.com/v2/translate
 
-# deeplApiUrl:The URL to call the API.
-# If the plan is free "https://api-free.deepl.com/v2/translate"
-# If the plan is pro "https://api.deepl.com/v2/translate"
-deeplApiUrl = "https://api-free.deepl.com/v2/translate"
-
-#deeplKey:API key for using the DeepL translation API.
-deeplKey = "yourApiKey"
+;API key for using the DeepL translation API.
+apiKey = yourApiKey
 
 
-...
+[System]
+waitressThreads = 6
+host = localhost
+port = 50000
 ```
 
 
@@ -67,7 +69,7 @@ This application require the folllowing system to run.
 
 # Development
 In addition to the system requirements, the following environment is required:
-- Python 3.9(.7) installed in `%LOCALAPPDATA%\Programs\`
+- Python 3.9(.7)
 - Microsoft C++ Build Tools
 
 After cloning the repository, run setup.bat.
