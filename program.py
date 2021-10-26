@@ -13,6 +13,9 @@ from waitress import serve
 import time
 import configparser
 
+# バージョン番号
+version = "v1.0.1"
+
 # デフォルト設定
 # DeepL翻訳を使うかどうか
 enableDeepl = False
@@ -81,6 +84,27 @@ def loadConfig():
 
 # config読み込み
 loadConfig()
+
+# アップデートチェック
+def checkUpdate():
+  r = requests.get("https://api.github.com/repos/chikage8640/apils-translate/releases")
+  j0 = r.json()[0]
+  tag = j0["tag_name"]
+  url = j0["html_url"]
+  nTag = tagStrip(version)
+  gTag = tagStrip(tag)
+  haveUpdate = False
+  for i in range(len(nTag)):
+    if nTag[i] < gTag[i]:
+      haveUpdate = True
+  if haveUpdate:
+    print("Update is now available!({0} -> {1})\nPlease get update from Github.\n{2}".format(version, tag, url))
+
+# バージョン番号の処理
+def tagStrip(tag):
+  return list(map(int, tag.strip("v").split(".")))
+
+checkUpdate()
 
 # 言語判定の関数。文を入れると言語コードが返ってくる。
 def detectLanguage(text):
