@@ -1,9 +1,6 @@
 # apils-translate
 Set up a local server to provide the translation API.  
-This API can use Google Translate and DeepL Translator(Configuration is required).
-
-# Translated README
-Japanese - [README_JP.md](https://github.com/chikage8640/apils-translate/blob/main/docments/README_JP.md)
+This API can use Google Translate and DeepL Translator.(Configuration is required.)
 
 # Getting Started
 ## Install
@@ -43,17 +40,12 @@ Call it as a REST API, either GET or POST is fine. The return value is JSON.
 The following is an example.
 
 ```
-> curl "http://localhost:50000/translate" -d "text=Hello world!" -d "target=de"
+curl "http://localhost:50000/translate" -d "text=Hello world!" -d "target=de"
 {"states":200,"text":"Hallo Welt!","translater":"DeepL"}
 ```
-To test in your browser, go to the following link.  
-http://localhost:50000/translate?text=Hello+world!&target=de  
-You will see a JSON text like the following.  
-```
-{"states":200,"text":"Hallo Welt!","translater":"DeepL"}
-```
+
 ## Stop server
-Press Ctrl+C or kill task. (You can also close the console window directly.)
+Press Ctrl+C or kill task.
 
 # API
 ## URL
@@ -89,3 +81,7 @@ If you want to use this on another system, you may have to rewrite the batch fil
 
 # License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/chikage8640/apils-translate/blob/main/LICENSE) file for details
+
+# 余談(Digression)
+英語なんて微塵もできないのにreadmeここまで書いた俺を誰か褒めてくれ（）  
+英語はｺﾞﾐｶｽなので、校正ぜひぜひ待ってます。本来やってもらうなら日本語版置いておくべきなんだろうけど…原本なんてないので察して翻訳見てください。気が向いたら日本語版作るかも。
