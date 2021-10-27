@@ -14,7 +14,7 @@ import time
 import configparser
 
 # バージョン番号
-version = "v1.1.0"
+version = "v1.1.1"
 
 # デフォルト設定
 # DeepL翻訳を使うかどうか
